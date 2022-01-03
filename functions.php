@@ -141,6 +141,7 @@ add_action( 'widgets_init', 'vacarme_widgets_init' );
  */
 function vacarme_scripts() {
 	wp_enqueue_style( 'vacarme-style', get_stylesheet_uri(), array(), _S_VERSION );
+	wp_enqueue_style( "boostrap-style", "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" );
 	wp_style_add_data( 'vacarme-style', 'rtl', 'replace' );
 
 	wp_enqueue_script( 'vacarme-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );

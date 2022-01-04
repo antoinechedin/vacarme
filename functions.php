@@ -145,17 +145,67 @@ add_action('widgets_init', 'vacarme_widgets_init');
  */
 function vacarme_scripts()
 {
+	wp_enqueue_style("bootstrap-style", 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css', array(), null);
+	wp_enqueue_style("leaflet-style", 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css', array(), null);
 	wp_enqueue_style('vacarme-style', get_stylesheet_uri(), array(), _S_VERSION);
-	wp_enqueue_style("boostrap-style", "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css");
+	wp_enqueue_style('dynamic-map-style', get_template_directory_uri() . '/css/dynamic-map.css', array(), null);
 	wp_style_add_data('vacarme-style', 'rtl', 'replace');
 
+	wp_enqueue_script('bootstrap-script', 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', array(), null, true);
+	wp_enqueue_script('leaflet-script', 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js', array(), null, true);
 	wp_enqueue_script('vacarme-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true);
+	wp_enqueue_script('dynamic-map-script', get_template_directory_uri() . '/js/dynamic-map.js', array(), null, true);
 
 	if (is_singular() && comments_open() && get_option('thread_comments')) {
 		wp_enqueue_script('comment-reply');
 	}
+	add_filter('script_loader_tag', 'add_sctipt_attributes', 10, 3);
 }
 add_action('wp_enqueue_scripts', 'vacarme_scripts');
+
+function add_style_attributes($html, $handle)
+{
+	if ('bootstrap-style' === $handle) {
+		return str_replace('media="all"', 'integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"', $html);
+	}
+	if ('leaflet-style' === $handle) {
+		return str_replace('media="all"', 'integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""', $html);
+	}
+
+	return $html;
+}
+add_filter('style_loader_tag', 'add_style_attributes', 10, 2);
+
+
+function add_sctipt_attributes($tag, $handle, $src)
+{
+	if ('bootstrap-script' === $handle) {
+		return '<script src="' . $src . '" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>' . "\n";
+	}
+	if ('leaflet-script' == $handle) {
+		return '<script src="' . $src . '" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>' . "\n";
+	}
+
+	return $tag;
+}
+
+function add_menu_link_class($atts, $item, $args)
+{
+	if (property_exists($args, 'link_class')) {
+		$atts['class'] = $args->link_class;
+	}
+	return $atts;
+}
+add_filter('nav_menu_link_attributes', 'add_menu_link_class', 1, 3);
+
+function add_menu_list_item_class($classes, $item, $args)
+{
+	if (property_exists($args, 'list_item_class')) {
+		$classes[] = $args->list_item_class;
+	}
+	return $classes;
+}
+add_filter('nav_menu_css_class', 'add_menu_list_item_class', 1, 3);
 
 /**
  * Implement the Custom Header feature.

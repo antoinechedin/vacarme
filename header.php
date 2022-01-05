@@ -12,7 +12,8 @@
 
 ?>
 <!doctype html>
-<html <?php language_attributes(); ?>>
+<html <?php language_attributes();
+		if (is_home()) : ?> class="fullscreen-page" <?php endif; ?>>
 
 <head>
 	<meta charset="<?php bloginfo('charset'); ?>">
@@ -28,7 +29,7 @@
 		<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e('Skip to content', 'vacarme'); ?></a>
 
 		<header id="masthead" class="site-header">
-			<nav id="site-navigation" class="main-navigation navbar navbar-expand-lg navbar-light bg-light" role="navigation">
+			<nav id="site-navigation" class="main-navigation navbar fixed-top navbar-expand-lg navbar-light bg-light" role="navigation">
 				<div class="container-fluid">
 					<a class="navbar-brand" href="#"><?php bloginfo('name'); ?></a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +47,7 @@
 					?>
 				</div>
 			</nav><!-- #site-navigation -->
-			<div class="site-branding">
+			<!-- <div class="site-branding">
 				<?php
 				the_custom_logo();
 				if (is_front_page() && is_home()) :
@@ -64,5 +65,6 @@
 					<p class="site-description"><?php echo $vacarme_description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
 												?></p>
 				<?php endif; ?>
-			</div><!-- .site-branding -->
+			</div>-->
+			<!-- .site-branding -->
 		</header><!-- #masthead -->

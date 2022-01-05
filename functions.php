@@ -148,8 +148,8 @@ function vacarme_scripts()
 	wp_enqueue_style("bootstrap-style", 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css', array(), null);
 	wp_enqueue_style("leaflet-style", 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css', array(), null);
 	wp_enqueue_style('vacarme-style', get_stylesheet_uri(), array(), _S_VERSION);
-	wp_enqueue_style('dynamic-map-style', get_template_directory_uri() . '/css/dynamic-map.css', array(), null);
 	wp_style_add_data('vacarme-style', 'rtl', 'replace');
+	wp_enqueue_style('dynamic-map-style', get_template_directory_uri() . '/css/dynamic-map.css', array(), null);
 
 	wp_enqueue_script('bootstrap-script', 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', array(), null, true);
 	wp_enqueue_script('leaflet-script', 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js', array(), null, true);
@@ -162,6 +162,24 @@ function vacarme_scripts()
 	add_filter('script_loader_tag', 'add_sctipt_attributes', 10, 3);
 }
 add_action('wp_enqueue_scripts', 'vacarme_scripts');
+
+function admin_bar_fullscreen_handle()
+{
+	if (is_admin_bar_showing()) {
+?>
+		<style>
+			.fullscreen-page body {
+				padding-bottom: 32px;
+			}
+
+			.navbar.fixed-top {
+				margin-top: 32px
+			}
+		</style>
+<?php
+	}
+}
+add_action('wp_head', 'admin_bar_fullscreen_handle');
 
 function add_style_attributes($html, $handle)
 {

@@ -11,10 +11,9 @@
 get_header();
 ?>
 
-<main id="primary" class="site-main container">
-    <div id="dynamic-map" class="dynamic-map container-fluid"></div>
+<main id="primary" class="site-main fullscreen-container">
+    <div id="dynamic-map" class="fullscreen-map"></div>
 </main>
 
 <?php
-get_sidebar();
 get_footer();

@@ -175,6 +175,16 @@ function admin_bar_fullscreen_handle()
 			.navbar.fixed-top {
 				margin-top: 32px
 			}
+
+			@media screen and (max-width:782px) {
+				.fullscreen-page body {
+					padding-bottom: 46px;
+				}
+
+				.navbar.fixed-top {
+					margin-top: 46px
+				}
+			}
 		</style>
 <?php
 	}

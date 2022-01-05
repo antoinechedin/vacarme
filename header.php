@@ -26,12 +26,12 @@
 <body <?php body_class(); ?>>
 	<?php wp_body_open(); ?>
 	<div id="page" class="site">
-		<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e('Skip to content', 'vacarme'); ?></a>
+		<!-- <a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e('Skip to content', 'vacarme'); ?></a> -->
 
 		<header id="masthead" class="site-header">
-			<nav id="site-navigation" class="main-navigation navbar fixed-top navbar-expand-lg navbar-light bg-light" role="navigation">
+			<nav id="site-navigation" class="main-navigation navbar <?php if (is_home()) echo 'fixed-top'; ?> navbar-expand-lg navbar-light bg-light" role="navigation">
 				<div class="container-fluid">
-					<a class="navbar-brand" href="#"><?php bloginfo('name'); ?></a>
+					<a class="navbar-brand" href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>

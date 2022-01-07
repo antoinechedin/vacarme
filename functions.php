@@ -235,6 +235,11 @@ function add_menu_list_item_class($classes, $item, $args)
 }
 add_filter('nav_menu_css_class', 'add_menu_list_item_class', 1, 3);
 
+function test()
+{
+	return '<h1 class="text-danger">Danger</h1>';
+}
+
 /**
  * Implement the Custom Header feature.
  */

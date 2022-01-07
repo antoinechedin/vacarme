@@ -29,7 +29,7 @@
 		<!-- <a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e('Skip to content', 'vacarme'); ?></a> -->
 
 		<header id="masthead" class="site-header">
-			<nav id="site-navigation" class="main-navigation navbar <?php if (is_home()) echo 'fixed-top'; ?> navbar-expand-lg navbar-light bg-light" role="navigation">
+			<nav id="site-navigation" class="main-navigation navbar <?php if (is_home()) echo 'fixed-top'; ?> navbar-expand-lg navbar-dark bg-dark" role="navigation">
 				<div class="container-fluid">
 					<a class="navbar-brand" href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
 					<?php
 					wp_nav_menu(
 						array(
+							'menu' => 'Main menu',
 							'container_class' => 'collapse navbar-collapse',
 							'items_wrap' => '<ul id="%1$s" class="%2$s navbar-nav mx-auto">%3$s</ul>',
 							'list_item_class' => 'nav-item',

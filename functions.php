@@ -146,15 +146,19 @@ add_action('widgets_init', 'vacarme_widgets_init');
 function vacarme_scripts()
 {
 	wp_enqueue_style("bootstrap-style", 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css', array(), null);
-	wp_enqueue_style("leaflet-style", 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css', array(), null);
 	wp_enqueue_style('vacarme-style', get_stylesheet_uri(), array(), _S_VERSION);
 	wp_style_add_data('vacarme-style', 'rtl', 'replace');
-	wp_enqueue_style('dynamic-map-style', get_template_directory_uri() . '/css/dynamic-map.css', array(), null);
 
 	wp_enqueue_script('bootstrap-script', 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', array(), null, true);
-	wp_enqueue_script('leaflet-script', 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js', array(), null, true);
 	wp_enqueue_script('vacarme-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true);
-	wp_enqueue_script('dynamic-map-script', get_template_directory_uri() . '/js/dynamic-map.js', array(), null, true);
+
+	if (is_home()) {
+		wp_enqueue_style("leaflet-style", 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css', array(), null);
+		wp_enqueue_script('leaflet-script', 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js', array(), null, true);
+		wp_enqueue_style('dynamic-map-style', get_template_directory_uri() . '/css/dynamic-map.css', array(), null);
+		wp_enqueue_script('dynamic-map-script', get_template_directory_uri() . '/js/dynamic-map.js', array(), null, true);
+		wp_add_inline_script('dynamic-map-script', load_dynamic_map_marker());
+	}
 
 	if (is_singular() && comments_open() && get_option('thread_comments')) {
 		wp_enqueue_script('comment-reply');
@@ -235,10 +239,44 @@ function add_menu_list_item_class($classes, $item, $args)
 }
 add_filter('nav_menu_css_class', 'add_menu_list_item_class', 1, 3);
 
-function test()
+function load_dynamic_map_marker()
 {
-	return '<h1 class="text-danger">Danger</h1>';
+	$location_posts = get_posts(array(
+		'category' => 6,
+		'numberposts' => -1
+	));
+
+	$locations = array();
+	foreach ($location_posts as $post) {
+		array_push(
+			$locations,
+			CFS()->get(
+				false,
+				$post->ID,
+				array('format' => 'raw')
+			)
+		);
+	}
+
+	return sprintf(
+		<<<JS
+		var locations = %s;
+		var location_posts = %s;
+		console.log(location_posts);
+		locations.forEach((location, index) => {
+			L.marker([
+				parseFloat(location.latitude.replace(',', '.')),
+				parseFloat(location.longitude.replace(',', '.'))
+			])
+			.addTo(map)
+			.bindPopup(location_posts[index].post_title);
+		});
+		JS,
+		json_encode($locations),
+		json_encode($location_posts)
+	);
 }
+
 
 /**
  * Implement the Custom Header feature.

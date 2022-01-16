@@ -1,0 +1,21 @@
+
+.fullscreen-page, .fullscreen-page body, .fullscreen-page div.site, .fullscreen-page .fullscreen-container {
+    height: 100%;
+    /* overflow: hidden; */
+    width: 100%;
+}
+
+.fullscreen-page body {
+/* height of .navbar, customize with @navbar-height variable */
+padding-top: 56px;
+}
+
+/* .navbar {
+min-height: 50px;
+} */
+
+#dynamic-map {
+height: 100%;
+width: auto;
+}
+  

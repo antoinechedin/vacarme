@@ -10,7 +10,7 @@
 
 if (!defined('_S_VERSION')) {
 	// Replace the version number of the theme on each release.
-	define('_S_VERSION', '0.1.0');
+	define('_S_VERSION', '0.1.1');
 }
 
 if (!function_exists('vacarme_setup')) :
@@ -151,12 +151,13 @@ function vacarme_scripts()
 
 	wp_enqueue_script('bootstrap-script', 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', array(), null, true);
 	wp_enqueue_script('vacarme-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true);
-
+	
 	if (is_home()) {
 		wp_enqueue_style("leaflet-style", 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css', array(), null);
 		wp_enqueue_script('leaflet-script', 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js', array(), null, false);
 		wp_enqueue_style('dynamic-map-style', get_template_directory_uri() . '/css/dynamic-map.css', array(), null);
 		wp_enqueue_script('dynamic-map-script', get_template_directory_uri() . '/js/dynamic-map.js', array(), null, true);
+		wp_localize_script('dynamic-map-script', 'WORDPRESS', array('siteUrl' => get_option('siteurl')));
 		wp_add_inline_script('dynamic-map-script', load_dynamic_map_marker());
 	}
 

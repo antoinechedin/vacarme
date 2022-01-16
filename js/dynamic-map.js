@@ -3,7 +3,7 @@ var map = L.map('dynamic-map', {
     maxZoom: 2
 });
 
-L.tileLayer('http://localhost/wp-content/uploads/2022/01/{z}{y}{x}.jpg', {
+L.tileLayer(WORDPRESS.siteUrl + '/wp-content/uploads/2022/01/{z}{y}{x}.jpg', {
     minZoom: 0,
     maxZoom: 2,
     noWrap: true,

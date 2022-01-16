@@ -154,7 +154,7 @@ function vacarme_scripts()
 
 	if (is_home()) {
 		wp_enqueue_style("leaflet-style", 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css', array(), null);
-		wp_enqueue_script('leaflet-script', 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js', array(), null, true);
+		wp_enqueue_script('leaflet-script', 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js', array(), null, false);
 		wp_enqueue_style('dynamic-map-style', get_template_directory_uri() . '/css/dynamic-map.css', array(), null);
 		wp_enqueue_script('dynamic-map-script', get_template_directory_uri() . '/js/dynamic-map.js', array(), null, true);
 		wp_add_inline_script('dynamic-map-script', load_dynamic_map_marker());
@@ -242,38 +242,49 @@ add_filter('nav_menu_css_class', 'add_menu_list_item_class', 1, 3);
 function load_dynamic_map_marker()
 {
 	$location_posts = get_posts(array(
-		'category' => 6,
-		'numberposts' => -1
+		'post_type' => 'rpg_map_location',
+		'numberposts' => -1,
 	));
 
 	$locations = array();
 	foreach ($location_posts as $post) {
 		array_push(
 			$locations,
-			CFS()->get(
-				false,
-				$post->ID,
-				array('format' => 'raw')
-			)
+			get_post_meta($post->ID)
 		);
 	}
+
+	$a = get_posts(array(
+		'post_type' => 'attachment',
+	));
 
 	return sprintf(
 		<<<JS
 		var locations = %s;
 		var location_posts = %s;
-		console.log(location_posts);
+
+		var zoom2Layer = L.layerGroup();
+
+		console.log(locations);
 		locations.forEach((location, index) => {
-			L.marker([
-				parseFloat(location.latitude.replace(',', '.')),
-				parseFloat(location.longitude.replace(',', '.'))
-			])
-			.addTo(map)
-			.bindPopup(location_posts[index].post_title);
+			var markerArgs = {};
+			if (location._rpg_map_marker_icon && location._rpg_map_marker_icon[0] && location._rpg_map_marker_icon[0] != "")
+				markerArgs.icon = L.icon({ iconUrl: location._rpg_map_marker_icon[0] });
+			var m = L.marker([
+				parseFloat(location._rpg_map_latitude[0].replace(',', '.')),
+				parseFloat(location._rpg_map_longitude[0].replace(',', '.'))
+			], markerArgs);
+			zoom2Layer.addLayer(m);
+			m.bindPopup(location_posts[index].post_title);
 		});
+
+		map.on('zoomend', () => {
+			if (map.getZoom() < 1) map.removeLayer(zoom2Layer);
+			else map.addLayer(zoom2Layer);
+		})
 		JS,
 		json_encode($locations),
-		json_encode($location_posts)
+		json_encode($location_posts),
 	);
 }
 
